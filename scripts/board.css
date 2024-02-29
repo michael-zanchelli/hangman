@@ -1,0 +1,9 @@
+/* Styles for the hangman "board" */
+
+div#board {
+    font: 1.5rem, verdana, serif;
+}
+
+div#board #answer {
+    padding: 0 0.75em;
+}

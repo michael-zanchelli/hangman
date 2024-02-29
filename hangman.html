@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<!-- Web page that hosts the game of Hangman -->
+<!-- TO DO:
+-->
+
+<HTML lang="en">
+
+<HEAD>
+  <TITLE>Hangman</TITLE>
+  <META charset="utf-8">
+  <META name="keywords" value="hangman">
+  <META name="description" value="Hangman word game">
+  <meta name="author" content="Michael Zanchelli">
+  <META name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <LINK href="scripts/hangman.css" rel="stylesheet" type="text/css">
+  <!-- <script src="scripts/hangman.js"></script> -->
+  <script src="scripts/hangman-ui.js"></script>
+  <script src="scripts/gallows-ui.js"></script>
+</HEAD>
+
+<BODY>
+  <SECTION>
+    <div id="hangman">
+      <div id="title">Hangman</div>
+      <canvas id="gallows"></canvas>
+      <div id="board">
+        <span id="answer"></span>
+        <div id="guesses"></div>
+      </div>
+      <button type="button" id="newGameButton">New Game</button>
+    </div>
+  </SECTION>
+</BODY>
+
+</HTML>

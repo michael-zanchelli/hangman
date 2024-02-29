@@ -1,0 +1,35 @@
+@import "board.css";
+@import "gallows.css";
+
+/* Styling for Hangman game UI */
+
+div#hangman {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+  font-family: verdana, serif;
+
+}
+
+/* Title */
+div#hangman #title {
+  font: bold 20pt;
+}
+
+/* New Game button */
+div#hangman #newGameButton {
+  width: 120px;
+  background-color: #09f;
+  color: white;
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: large;
+  margin: 6px;
+}
+
+div#hangman #newGameButton:hover {
+  background-color: #07d;
+}
