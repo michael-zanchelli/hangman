@@ -6,6 +6,7 @@ class HangmanUI {
   static #WORD_URL = "https://random-word-api.herokuapp.com/word";
 
   #hangman; /** Hangman game obj */
+  #gallowsUI; /** Gallows UI class */
   #answerEl;   /** "answer" element */
   #guessesEl; /** "guesses" element */
   #statusEl; /** "status" field */
@@ -20,6 +21,7 @@ class HangmanUI {
    */
   constructor() {
     this.#hangman = new Hangman();
+    this.#gallowsUI = new GallowsUI();
 
     this.#answerEl = document.querySelector("div#hangman #answers");
     this.#statusEl = document.querySelector("div#hangman #status");
@@ -34,6 +36,8 @@ class HangmanUI {
 
   #newGame() {
     this.#guesses = null;
+    this.#gallowsUI.newGame();
+
     const response = fetch(HangmanUI.#WORD_URL)
       .then(response => response.json())
       .then(data => {
@@ -75,9 +79,11 @@ class HangmanUI {
     console.log("guesses=" + this.#guesses);
     if (this.#theAnswer.includes(input)) {
       // update answer UI
+      console.log("update answer UI...");
     }
     else {
       // update gallows UI
+      console.log("update gallows UI...");
     }
   }
 
