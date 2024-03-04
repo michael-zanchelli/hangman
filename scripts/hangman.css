@@ -1,5 +1,4 @@
 @import "board.css";
-@import "gallows.css";
 
 /* Styling for Hangman game UI */
 
@@ -9,7 +8,6 @@ div#hangman {
   justify-content: space-between;
   align-items: center;
   font-family: verdana, serif;
-
 }
 
 /* Title */

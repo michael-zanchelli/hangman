@@ -1,9 +1,29 @@
 /* Styles for the hangman "board" */
 
 div#board {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    align-items: center;
     font: 1.5rem, verdana, serif;
 }
 
 div#board #answer {
+    color: #000;
+    margin: 0.75em 0;
+    /* height: 2ex; */
+    /* line-height: 2ex; */
+}
+
+div#board #answer>span {
     padding: 0 0.75em;
+    text-wrap: nowrap;
+    display: inline-block;
+    border-bottom: 3px solid;
+    width: 1em;
+    vertical-align: top;
+    /* height: 2ex; */
+    /* line-height: 2ex; */
+    text-align: center;
+    overflow: hidden;
 }
