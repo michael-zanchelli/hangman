@@ -30,14 +30,15 @@ class HangmanUI {
     const response = fetch(HangmanUI.#WORD_URL)
       .then(response => response.json())
       .then(data => {
-        this.#theAnswer = data[0].toUpperCase();
+        this.#theAnswer = data[0];
+        console.log("word=" + this.#theAnswer);
         setTimeout(() => { this.#boardUI.newGame(this.#theAnswer); }, 10);
         // return this.#theAnswer;
       });
   }
 
   newGameButtonClickHandler() {
-
+    this.#newGame();
   }
 }
 

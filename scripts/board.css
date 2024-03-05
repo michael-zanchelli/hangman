@@ -5,25 +5,40 @@ div#board {
     flex-flow: column nowrap;
     justify-content: space-between;
     align-items: center;
+    margin: 1ex 0;
     font: 1.5rem, verdana, serif;
 }
 
+div#board #gallows {
+    width: 100%;
+}
+
 div#board #answer {
-    color: #000;
-    margin: 0.75em 0;
-    /* height: 2ex; */
-    /* line-height: 2ex; */
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin: inherit;
 }
 
 div#board #answer>span {
-    padding: 0 0.75em;
+    margin: 0 0.5em;
     text-wrap: nowrap;
-    display: inline-block;
+    /* display: inline-block; */
     border-bottom: 3px solid;
     width: 1em;
-    vertical-align: top;
+    /* vertical-align: top; */
     /* height: 2ex; */
     /* line-height: 2ex; */
     text-align: center;
     overflow: hidden;
+    font-weight: bold;
+}
+
+div#board #guesses {
+    margin: inherit;
+}
+
+div#board #status {
+    margin: inherit;
+    height: 1ex;
 }
