@@ -5,7 +5,7 @@
 class HangmanUI {
   static #WORD_URL = "https://random-word-api.herokuapp.com/word";
 
-  #boardUI; /** HangmanBoard UI class */
+  #answerUI; /** HangmanBoard UI class */
 
   #newGameButton; /** New Game button */
 
@@ -16,7 +16,7 @@ class HangmanUI {
    */
   constructor() {
     const hangmanEl = document.querySelector("div#hangman");
-    this.#boardUI = new HangmanBoardUI(hangmanEl);
+    this.#answerUI = new HangmanAnswerUI(hangmanEl);
     this.#newGameButton = hangmanEl.querySelector("#newGameButton");
     this.#newGameButton.onclick = () => this.newGameButtonClickHandler();
 
@@ -29,7 +29,7 @@ class HangmanUI {
       .then(data => {
         this.#theAnswer = data[0];
         console.log("word=" + this.#theAnswer);
-        setTimeout(() => { this.#boardUI.newGame(this.#theAnswer); }, 10);
+        setTimeout(() => { this.#answerUI.newGame(this.#theAnswer); }, 10);
         // return this.#theAnswer;
       });
   }

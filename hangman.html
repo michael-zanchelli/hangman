@@ -16,14 +16,15 @@
 
   <LINK href="scripts/hangman.css" rel="stylesheet" type="text/css">
   <script src="scripts/hangman-ui.js"></script>
-  <script src="scripts/board-ui.js"></script>
+  <script src="scripts/answer-ui.js"></script>
+  <script src="scripts/gallows-ui.js"></script>
 </HEAD>
 
 <BODY>
   <SECTION>
     <div id="hangman">
       <div id="title">Hangman</div>
-      <canvas id="gallows"></canvas>
+      <canvas id="gallows" width="120" height="180"></canvas>
       <div id="answer"></div>
       <label for="guesses">Guesses: <input type="text" id="guesses" name="guesses" /></label>
       <div id="status">&nbsp;</div>
