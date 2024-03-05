@@ -3,18 +3,19 @@
 class HangmanBoardUI {
 
   /* defines for the gallows UI */
+  static #GALLOWS_WIDTH = 120;
+  static #GALLOWS_HEIGHT = 180;
   static #NUM_BODY_PARTS = 6;
-  static #BEAM_LTH = 20;
-  static #POST_HEIGHT = 40;
-  static #BASE_LTH = 16;
-  static #NOOSE_LTH = 8;
+  static #BASE_WIDTH = 0.5 * HangmanBoardUI.#GALLOWS_WIDTH; /** percent of canvas width */
+  static #BEAM_WIDTH = 0.5 * HangmanBoardUI.#GALLOWS_WIDTH; /** percent of canvas width */
+  static #POST_HEIGHT = 0.8 * HangmanBoardUI.#GALLOWS_HEIGHT; /** percent of canvas height */
+  static #NOOSE_LTH = 0.1 * HangmanBoardUI.#GALLOWS_HEIGHT; /** percent of canvas height */
 
   /* Defines for the answer UI */
-  static #ANSWER_CHAR_HTML = "<span></span>";
+  static #ANSWER_CHAR_HTML = "<span>&nbsp</span>";
   static #BLANK = "*";
 
   /* Board elements */
-  #gallowsEl; /** "gallows" canvas element */
   #answerEl;   /** "answer" element */
   #guessesEl; /** "guesses" element */
   #statusEl; /** "status" field */
@@ -29,20 +30,24 @@ class HangmanBoardUI {
   #numPartsDrawn; /** number of hangman body parts drawn so far */
 
   constructor(hangmanEl) {
-    let boardEl = hangmanEl.querySelector("#board");
-    this.#gallowsEl = boardEl.querySelector("#gallows");
-    this.#answerEl = boardEl.querySelector("#answer");
-    this.#guessesEl = boardEl.querySelector("#guesses");
-    this.#statusEl = boardEl.querySelector("#status");
+    this.#answerEl = hangmanEl.querySelector("#answer");
+    this.#guessesEl = hangmanEl.querySelector("#guesses");
+    this.#statusEl = hangmanEl.querySelector("#status");
 
     this.#guessesEl.addEventListener("input", (event) => this.inputHandler(event));
+
+    let gallowsEl = hangmanEl.querySelector("#gallows");
+    // gallowsEl.width = HangmanBoardUI.#GALLOWS_WIDTH;
+    // gallowsEl.height = HangmanBoardUI.#GALLOWS_HEIGHT;
+    this.#canvasCtx = gallowsEl.getContext("2d");
+    this.#canvasCtx.lineWidth = 3;
+    this.#canvasCtx.strokeStyle = "black";
 
     this.#gallowsDrawMethods = [
       this.#drawHead, this.#drawBody,
       this.#drawLeftArm, this.#drawRightArm,
       this.#drawLeftLeg, this.#drawRightLeg
     ];
-    this.#canvasCtx = this.#gallowsEl.getContext("2d");
   }
 
   newGame(answer) {
@@ -52,7 +57,7 @@ class HangmanBoardUI {
     this.#drawGallows();
 
     this.#guessesEl.value = ""; // init guesses input/display
-    this.#guesses = ""; // init accumukated guesses
+    this.#guesses = ""; // init accumulated guesses
     this.#statusEl.innerText = ""; // init status
     /* init answer UI */
     this.#answerEl.innerHTML = HangmanBoardUI.#ANSWER_CHAR_HTML.repeat(answer.length);
@@ -61,26 +66,26 @@ class HangmanBoardUI {
   }
 
   #drawGallows() {
-    const width = this.#canvasCtx.canvas.width;
-    const height = this.#canvasCtx.canvas.height;
-
-    this.#canvasCtx.clearRect(0, 0, width, height);
+    this.#canvasCtx.clearRect(0, 0, HangmanBoardUI.#GALLOWS_WIDTH, HangmanBoardUI.#GALLOWS_HEIGHT);
 
     this.#canvasCtx.beginPath();
+
     /* draw base */
-    this.#canvasCtx.moveTo(0, height);
-    this.#canvasCtx.lineTo(HangmanBoardUI.#BASE_LTH, height);
+    const baseX = HangmanBoardUI.#GALLOWS_WIDTH / 3;
+    const baseY = HangmanBoardUI.#GALLOWS_HEIGHT - 4;
+    this.#canvasCtx.moveTo(baseX, baseY);
+    this.#canvasCtx.lineTo(baseX + HangmanBoardUI.#BASE_WIDTH, baseY);
     /* draw post */
-    this.#canvasCtx.moveTo(HangmanBoardUI.#BASE_LTH / 2, height);
-    this.#canvasCtx.lineTo(HangmanBoardUI.#BASE_LTH / 2,
-    height - HangmanBoardUI.#POST_HEIGHT);
+    const postX = baseX / 2;
+    this.#canvasCtx.moveTo(postX, baseY);
+    this.#canvasCtx.lineTo(postX, baseY - HangmanBoardUI.#POST_HEIGHT);
     /* draw beam */
-    // this.#canvasCtx.moveTo(HangmanBoardUI.#BASE_LTH / 2, height - HangmanBoardUI.#POST_HEIGHT);
-    this.#canvasCtx.lineTo(HangmanBoardUI.#BASE_LTH / 2 + HangmanBoardUI.#BEAM_LTH,
-      height - HangmanBoardUI.#POST_HEIGHT);
+    const beamY = baseY - HangmanBoardUI.#POST_HEIGHT;
+    this.#canvasCtx.lineTo(postX + HangmanBoardUI.#BEAM_WIDTH, beamY);
     /* draw noose */
-    this.#canvasCtx.lineTo(HangmanBoardUI.#BASE_LTH / 2 + HangmanBoardUI.#BEAM_LTH,
-      height - HangmanBoardUI.#POST_HEIGHT + HangmanBoardUI.#NOOSE_LTH);
+    const nooseX = postX + HangmanBoardUI.#BEAM_WIDTH;
+    this.#canvasCtx.lineTo(nooseX, beamY + HangmanBoardUI.#NOOSE_LTH);
+
     this.#canvasCtx.stroke();
   }
 
@@ -153,9 +158,7 @@ class HangmanBoardUI {
       return;
     }
     // Text input is a unique guess
-    console.log("typed: " + input);
     this.#guesses += input;
-    console.log("guesses=" + this.#guesses);
     input = input.toLowerCase();
     if (this.#theAnswer.includes(input)) {
       this.#updateAnswerUI(input);
@@ -165,5 +168,4 @@ class HangmanBoardUI {
       console.log("update gallows UI...");
     }
   }
-
 }

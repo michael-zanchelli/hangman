@@ -1,5 +1,3 @@
-@import "board.css";
-
 /* Styling for Hangman game UI */
 
 div#hangman {
@@ -7,12 +5,39 @@ div#hangman {
   flex-flow: column nowrap;
   justify-content: space-between;
   align-items: center;
+  margin: 1ex 0;
   font-family: verdana, serif;
 }
 
 /* Title */
 div#hangman #title {
   font: bold 20pt;
+}
+
+div#hangman #answer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin: inherit;
+}
+
+div#hangman #answer>span {
+  width: 1em;
+  margin: 0 0.5em;
+  text-wrap: nowrap;
+  border-bottom: 3px solid;
+  text-align: center;
+  overflow: hidden;
+  font-weight: bold;
+}
+
+div#hangman #guesses {
+  margin: inherit;
+}
+
+div#hangman #status {
+  margin: inherit;
+  height: 1ex;
 }
 
 /* New Game button */

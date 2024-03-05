@@ -17,19 +17,16 @@
   <LINK href="scripts/hangman.css" rel="stylesheet" type="text/css">
   <script src="scripts/hangman-ui.js"></script>
   <script src="scripts/board-ui.js"></script>
-  <script src="scripts/hangman.js"></script>
 </HEAD>
 
 <BODY>
   <SECTION>
     <div id="hangman">
       <div id="title">Hangman</div>
-      <div id="board">
-        <canvas id="gallows"></canvas>
-        <div id="answer"></div>
-        <label for="guesses">Guesses: <input type="text" id="guesses" name="guesses" /></label>
-        <div id="status"></div>
-      </div>
+      <canvas id="gallows"></canvas>
+      <div id="answer"></div>
+      <label for="guesses">Guesses: <input type="text" id="guesses" name="guesses" /></label>
+      <div id="status">&nbsp;</div>
       <button type="button" id="newGameButton">New Game</button>
     </div>
   </SECTION>

@@ -5,7 +5,6 @@
 class HangmanUI {
   static #WORD_URL = "https://random-word-api.herokuapp.com/word";
 
-  #hangman; /** Hangman game obj */
   #boardUI; /** HangmanBoard UI class */
 
   #newGameButton; /** New Game button */
@@ -20,8 +19,6 @@ class HangmanUI {
     this.#boardUI = new HangmanBoardUI(hangmanEl);
     this.#newGameButton = hangmanEl.querySelector("#newGameButton");
     this.#newGameButton.onclick = () => this.newGameButtonClickHandler();
-
-    this.#hangman = new Hangman();
 
     this.#newGame();
   }
