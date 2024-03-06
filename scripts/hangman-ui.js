@@ -30,7 +30,6 @@ class HangmanUI {
         this.#theAnswer = data[0];
         console.log("word=" + this.#theAnswer);
         setTimeout(() => { this.#answerUI.newGame(this.#theAnswer); }, 10);
-        // return this.#theAnswer;
       });
   }
 

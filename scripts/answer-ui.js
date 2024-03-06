@@ -91,13 +91,13 @@ class HangmanAnswerUI {
       this.#updateAnswerUI(input);
 
       if (!this.#answerTemplate.includes(HangmanAnswerUI.#BLANK)) {
-        alert("YOU WIN");
+        setTimeout(() => { alert("YOU WIN"); }, 10);
       }
     }
     else {
       // update gallows UI
       if (this.#gallowsUI.drawNext()) {
-        alert("YOU LOSE");
+        setTimeout(() => { alert("YOU LOSE"); }, 10);
       }
     }
   }
