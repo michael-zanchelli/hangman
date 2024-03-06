@@ -31,12 +31,23 @@ class HangmanAnswerUI {
 
     this.#theAnswer = answer;
     this.#guessesEl.value = ""; // init guesses input/display
+    this.#guessesEl.disabled = false; // enable input
+    this.#guessesEl.readonly = false; // enable input
     this.#guesses = ""; // init accumulated guesses
     this.#statusEl.innerText = ""; // init status
     /* init answer UI */
     this.#answerEl.innerHTML = HangmanAnswerUI.#ANSWER_CHAR_HTML.repeat(answer.length);
     // init answer template
     this.#answerTemplate = HangmanAnswerUI.#BLANK.repeat(answer.length);
+  }
+
+  #endGame(win) {
+    const str = win ? "YOU WIN" : "YOU LOSE"
+    console.log(str);
+    this.#guessesEl.disabled = true; // enable input
+    this.#guessesEl.readonly = true; // enable input
+
+    this.#gallowsUI.endGame(win);
   }
 
   /**
@@ -90,14 +101,16 @@ class HangmanAnswerUI {
       // Update answer UI
       this.#updateAnswerUI(input);
 
-      if (!this.#answerTemplate.includes(HangmanAnswerUI.#BLANK)) {
-        setTimeout(() => { alert("YOU WIN"); }, 10);
+      const win = !this.#answerTemplate.includes(HangmanAnswerUI.#BLANK);
+      if (win) {
+        setTimeout(() => { this.#endGame(true); }, 10);
       }
     }
     else {
       // update gallows UI
-      if (this.#gallowsUI.drawNext()) {
-        setTimeout(() => { alert("YOU LOSE"); }, 10);
+      const lose = this.#gallowsUI.drawNext();
+      if (lose) {
+        setTimeout(() => { this.#endGame(false); }, 10);
       }
     }
   }
