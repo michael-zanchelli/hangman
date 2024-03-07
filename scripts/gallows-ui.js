@@ -3,8 +3,12 @@
 class HangmanGallowsUI {
 
   /* defines for drawing the gallows and hangman UI */
-  static #GALLOWS_WIDTH = 160; // set inline (see hangman.html)
-  static #GALLOWS_HEIGHT = 240; // set inline (see hangman.html)
+  /** actual canvas width/height, as specified inline (see hangman.html) */
+  static #CANVAS_WIDTH = 180;
+  static #CANVAS_HEIGHT = 240;
+
+  static #GALLOWS_WIDTH = HangmanGallowsUI.#CANVAS_WIDTH - 20;
+  static #GALLOWS_HEIGHT = HangmanGallowsUI.#CANVAS_HEIGHT - 6;
   static #BASE_WIDTH = 0.5 * HangmanGallowsUI.#GALLOWS_WIDTH; /** percent of canvas width */
   static #BASE_X = 4;
   static #BASE_Y = HangmanGallowsUI.#GALLOWS_HEIGHT - 4;
@@ -18,7 +22,6 @@ class HangmanGallowsUI {
   static #HEAD_RADIUS = 0.15 * HangmanGallowsUI.#GALLOWS_WIDTH; /** percent of canvas width */
   static #HEAD_X = HangmanGallowsUI.#NOOSE_X;
   static #HEAD_Y = HangmanGallowsUI.#BEAM_Y + HangmanGallowsUI.#NOOSE_LTH + HangmanGallowsUI.#HEAD_RADIUS;
-
   static #EYE_RADIUS = 3;
   static #SMILE_RADIUS = (2 * HangmanGallowsUI.#HEAD_RADIUS) / 3;
   static #POUT_RADIUS = HangmanGallowsUI.#HEAD_RADIUS / 2;
@@ -26,7 +29,6 @@ class HangmanGallowsUI {
   static #BODY_LTH = 0.3 * HangmanGallowsUI.#GALLOWS_HEIGHT; /** percent of canvas height */
   static #BODY_X = HangmanGallowsUI.#NOOSE_X;
   static #BODY_Y = HangmanGallowsUI.#HEAD_Y + HangmanGallowsUI.#HEAD_RADIUS;
-
   static #NECK_LTH = 0.3 * HangmanGallowsUI.#BODY_LTH; /** percent of body length */
   static #LIMB_LTH = 0.2 * HangmanGallowsUI.#GALLOWS_WIDTH; /** percent of canvas width */
   static #ARM_X = HangmanGallowsUI.#NOOSE_X;
@@ -55,19 +57,45 @@ class HangmanGallowsUI {
   }
 
   endGame(win) {
+    this.#canvasCtx.save();
     this.#canvasCtx.lineWidth = 2;
     this.#canvasCtx.strokeStyle = "darkgrey";
+    this.#canvasCtx.beginPath();
+
     if (win) {
-      this.#drawWin();
+      // re-draw gallows
+      this.#drawGallows();
+      // transform context so hangman is drawn away from gallows
+      this.#canvasCtx.translate(
+        HangmanGallowsUI.#CANVAS_WIDTH - HangmanGallowsUI.#GALLOWS_WIDTH + 4,
+        HangmanGallowsUI.#CANVAS_HEIGHT - HangmanGallowsUI.#GALLOWS_HEIGHT + 4);
+      // draw hangman (with winning arms)
+      for (const drawMethod of this.#gallowsDrawMethods) {
+        drawMethod(this.#canvasCtx, true);
+      }
     }
     else {
-      this.#drawLoss();
+      /* Clear left "straight" arm */
+      this.#canvasCtx.clearRect(
+        HangmanGallowsUI.#ARM_X - HangmanGallowsUI.#LIMB_LTH, HangmanGallowsUI.#ARM_Y - 1,
+        HangmanGallowsUI.#LIMB_LTH, 3);
+      /* Clear right "straight" arm */
+      this.#canvasCtx.clearRect(
+        HangmanGallowsUI.#ARM_X + 1, HangmanGallowsUI.#ARM_Y - 1,
+        HangmanGallowsUI.#LIMB_LTH, 3);
+      // draw lossing arms
+      this.#drawLeftArm(this.#canvasCtx, false);
+      this.#drawRightArm(this.#canvasCtx, false);
     }
+    this.#drawFace(win);
+    this.#canvasCtx.stroke();
+    this.#canvasCtx.restore();
   }
 
   #drawGallows() {
-    this.#canvasCtx.clearRect(0, 0, HangmanGallowsUI.#GALLOWS_WIDTH, HangmanGallowsUI.#GALLOWS_HEIGHT);
+    this.#canvasCtx.clearRect(0, 0, HangmanGallowsUI.#CANVAS_WIDTH, HangmanGallowsUI.#CANVAS_HEIGHT);
 
+    this.#canvasCtx.save();
     this.#canvasCtx.lineWidth = 3;
     this.#canvasCtx.strokeStyle = "black";
     this.#canvasCtx.beginPath();
@@ -84,18 +112,23 @@ class HangmanGallowsUI {
     this.#canvasCtx.lineTo(HangmanGallowsUI.#NOOSE_X, HangmanGallowsUI.#BEAM_Y + HangmanGallowsUI.#NOOSE_LTH);
 
     this.#canvasCtx.stroke();
+    this.#canvasCtx.restore();
   }
 
   drawNext() {
+    this.#canvasCtx.save();
     this.#canvasCtx.lineWidth = 2;
     this.#canvasCtx.strokeStyle = "darkgrey";
     this.#canvasCtx.beginPath();
     this.#gallowsDrawMethods[this.#numPartsDrawn++](this.#canvasCtx);
     this.#canvasCtx.stroke();
+    this.#canvasCtx.restore();
+
     return (this.#numPartsDrawn == this.#gallowsDrawMethods.length);
   }
 
   #drawHead(ctx) {
+    ctx.moveTo(HangmanGallowsUI.#HEAD_X + HangmanGallowsUI.#HEAD_RADIUS, HangmanGallowsUI.#HEAD_Y);
     ctx.arc(HangmanGallowsUI.#HEAD_X, HangmanGallowsUI.#HEAD_Y,
       HangmanGallowsUI.#HEAD_RADIUS, 0, 2 * Math.PI);
   }
@@ -105,14 +138,42 @@ class HangmanGallowsUI {
     ctx.lineTo(HangmanGallowsUI.#BODY_X, HangmanGallowsUI.#BODY_Y + HangmanGallowsUI.#BODY_LTH);
   }
 
-  #drawLeftArm(ctx) {
+  #drawLeftArm(ctx, win) {
     ctx.moveTo(HangmanGallowsUI.#ARM_X, HangmanGallowsUI.#ARM_Y);
-    ctx.lineTo(HangmanGallowsUI.#ARM_X - HangmanGallowsUI.#LIMB_LTH, HangmanGallowsUI.#ARM_Y); // + HangmanGallowsUI.#LIMB_LTH);
+    if ((win == undefined) || (win == null)) {
+      // arm flat (no win/loss, game in progress)
+      ctx.lineTo(HangmanGallowsUI.#ARM_X - HangmanGallowsUI.#LIMB_LTH,
+        HangmanGallowsUI.#ARM_Y);
+    }
+    else if (win) {
+      // win: arm UP
+      ctx.lineTo(HangmanGallowsUI.#ARM_X - HangmanGallowsUI.#LIMB_LTH,
+        HangmanGallowsUI.#ARM_Y - HangmanGallowsUI.#LIMB_LTH);
+    }
+    else {
+      // lose: arm DOWN
+      ctx.lineTo(HangmanGallowsUI.#ARM_X - HangmanGallowsUI.#LIMB_LTH,
+        HangmanGallowsUI.#ARM_Y + HangmanGallowsUI.#LIMB_LTH);
+    }
   }
 
-  #drawRightArm(ctx) {
+  #drawRightArm(ctx, win) {
     ctx.moveTo(HangmanGallowsUI.#ARM_X, HangmanGallowsUI.#ARM_Y);
-    ctx.lineTo(HangmanGallowsUI.#ARM_X + HangmanGallowsUI.#LIMB_LTH, HangmanGallowsUI.#ARM_Y); // + HangmanGallowsUI.#LIMB_LTH);
+    if ((win == undefined) || (win == null)) {
+      // arm flat (no win/loss, game in progress)
+      ctx.lineTo(HangmanGallowsUI.#ARM_X + HangmanGallowsUI.#LIMB_LTH,
+        HangmanGallowsUI.#ARM_Y);
+    }
+    else if (win) {
+      // win: arm UP
+      ctx.lineTo(HangmanGallowsUI.#ARM_X + HangmanGallowsUI.#LIMB_LTH,
+        HangmanGallowsUI.#ARM_Y - HangmanGallowsUI.#LIMB_LTH);
+    }
+    else {
+      // lose: arm DOWN
+      ctx.lineTo(HangmanGallowsUI.#ARM_X + HangmanGallowsUI.#LIMB_LTH,
+        HangmanGallowsUI.#ARM_Y + HangmanGallowsUI.#LIMB_LTH);
+    }
   }
 
   #drawLeftLeg(ctx) {
@@ -125,23 +186,6 @@ class HangmanGallowsUI {
     ctx.moveTo(HangmanGallowsUI.#LEG_X, HangmanGallowsUI.#LEG_Y);
     ctx.lineTo(HangmanGallowsUI.#LEG_X + HangmanGallowsUI.#LIMB_LTH,
       HangmanGallowsUI.#LEG_Y + HangmanGallowsUI.#LIMB_LTH);
-  }
-
-  #drawWin() {
-    // re-draw gallows
-    this.#drawGallows();
-    // translate contet so hangman is drawn away from gallows
-  }
-
-  #drawLoss() {
-    this.#canvasCtx.beginPath();
-    // if not complete, finish drawing hangman
-    while (this.#numPartsDrawn < this.#gallowsDrawMethods.length) {
-      this.#gallowsDrawMethods[this.#numPartsDrawn++](this.#canvasCtx);
-    }
-    this.#drawFace(win);
-    this.#drawArms(win);
-    this.#canvasCtx.stroke();
   }
 
   #drawFace(win) {
@@ -169,10 +213,6 @@ class HangmanGallowsUI {
       this.#canvasCtx.arc(HangmanGallowsUI.#HEAD_X, HangmanGallowsUI.#HEAD_Y + HangmanGallowsUI.#SMILE_RADIUS,
         HangmanGallowsUI.#POUT_RADIUS, 0, Math.PI, true);
     }
-  }
-
-  #drawArms(win) {
-
   }
 
 }
