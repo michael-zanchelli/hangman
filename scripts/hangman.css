@@ -11,7 +11,9 @@ div#hangman {
 
 /* Title */
 div#hangman #title {
-  font: bold 20pt;
+  font-weight: bold;
+  font-size: 20pt;
+  font-family: inherit;
 }
 
 /* Answer space */
@@ -34,6 +36,7 @@ div#hangman #answer>span {
 
 div#hangman #guesses {
   margin: inherit;
+  font: inherit;
 }
 
 div#hangman #status {

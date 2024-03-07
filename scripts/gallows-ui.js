@@ -52,44 +52,31 @@ class HangmanGallowsUI {
   }
 
   newGame() {
-    this.#numPartsDrawn = 0; // init gallows state
+    this.#canvasCtx.reset();
     this.#drawGallows();
+    this.#numPartsDrawn = 0; // init hangman drawing state
   }
 
   endGame(win) {
-    this.#canvasCtx.save();
-    this.#canvasCtx.lineWidth = 2;
-    this.#canvasCtx.strokeStyle = "darkgrey";
-    this.#canvasCtx.beginPath();
+    // re-draw gallows
+    this.#drawGallows();
 
     if (win) {
-      // re-draw gallows
-      this.#drawGallows();
       // transform context so hangman is drawn away from gallows
       this.#canvasCtx.translate(
         HangmanGallowsUI.#CANVAS_WIDTH - HangmanGallowsUI.#GALLOWS_WIDTH + 4,
         HangmanGallowsUI.#CANVAS_HEIGHT - HangmanGallowsUI.#GALLOWS_HEIGHT + 4);
-      // draw hangman (with winning arms)
-      for (const drawMethod of this.#gallowsDrawMethods) {
-        drawMethod(this.#canvasCtx, true);
-      }
     }
-    else {
-      /* Clear left "straight" arm */
-      this.#canvasCtx.clearRect(
-        HangmanGallowsUI.#ARM_X - HangmanGallowsUI.#LIMB_LTH, HangmanGallowsUI.#ARM_Y - 1,
-        HangmanGallowsUI.#LIMB_LTH, 3);
-      /* Clear right "straight" arm */
-      this.#canvasCtx.clearRect(
-        HangmanGallowsUI.#ARM_X + 1, HangmanGallowsUI.#ARM_Y - 1,
-        HangmanGallowsUI.#LIMB_LTH, 3);
-      // draw lossing arms
-      this.#drawLeftArm(this.#canvasCtx, false);
-      this.#drawRightArm(this.#canvasCtx, false);
+    this.#canvasCtx.lineWidth = 2;
+    this.#canvasCtx.strokeStyle = "darkgrey";
+    this.#canvasCtx.beginPath();
+
+    // draw hangman
+    for (const drawMethod of this.#gallowsDrawMethods) {
+      drawMethod(this.#canvasCtx, win);
     }
     this.#drawFace(win);
     this.#canvasCtx.stroke();
-    this.#canvasCtx.restore();
   }
 
   #drawGallows() {
