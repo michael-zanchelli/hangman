@@ -4,20 +4,23 @@ class HangmanGallowsUI {
 
   /* defines for drawing the gallows and hangman UI */
   /** actual canvas width/height, as specified inline (see hangman.html) */
-  static #CANVAS_WIDTH = 180;
+  static #CANVAS_WIDTH = 240;
   static #CANVAS_HEIGHT = 240;
+  static #MARGIN = 20;
 
-  static #GALLOWS_WIDTH = HangmanGallowsUI.#CANVAS_WIDTH - 20;
-  static #GALLOWS_HEIGHT = HangmanGallowsUI.#CANVAS_HEIGHT - 6;
+  static #GALLOWS_X = HangmanGallowsUI.#MARGIN;
+  static #GALLOWS_Y = HangmanGallowsUI.#MARGIN;
+  static #GALLOWS_WIDTH = HangmanGallowsUI.#CANVAS_WIDTH - 60 - (2 * HangmanGallowsUI.#MARGIN);
+  static #GALLOWS_HEIGHT = HangmanGallowsUI.#CANVAS_HEIGHT - (2 * HangmanGallowsUI.#MARGIN);
+  static #BASE_X = HangmanGallowsUI.#GALLOWS_X;
+  static #BASE_Y = HangmanGallowsUI.#GALLOWS_Y + HangmanGallowsUI.#GALLOWS_HEIGHT;
   static #BASE_WIDTH = 0.5 * HangmanGallowsUI.#GALLOWS_WIDTH; /** percent of canvas width */
-  static #BASE_X = 4;
-  static #BASE_Y = HangmanGallowsUI.#GALLOWS_HEIGHT - 4;
-  static #POST_HEIGHT = 0.8 * HangmanGallowsUI.#GALLOWS_HEIGHT; /** percent of canvas height */
   static #POST_X = HangmanGallowsUI.#BASE_X + (HangmanGallowsUI.#BASE_WIDTH / 2);
-  static #BEAM_WIDTH = 0.5 * HangmanGallowsUI.#GALLOWS_WIDTH; /** percent of canvas width */
+  static #POST_HEIGHT = HangmanGallowsUI.#GALLOWS_HEIGHT;
   static #BEAM_Y = HangmanGallowsUI.#BASE_Y - HangmanGallowsUI.#POST_HEIGHT;
-  static #NOOSE_LTH = 0.1 * HangmanGallowsUI.#GALLOWS_HEIGHT; /** percent of canvas height */
+  static #BEAM_WIDTH = 0.5 * HangmanGallowsUI.#GALLOWS_WIDTH; /** percent of canvas width */
   static #NOOSE_X = HangmanGallowsUI.#POST_X + HangmanGallowsUI.#BEAM_WIDTH;
+  static #NOOSE_LTH = 0.1 * HangmanGallowsUI.#GALLOWS_HEIGHT; /** percent of canvas height */
 
   static #HEAD_RADIUS = 0.15 * HangmanGallowsUI.#GALLOWS_WIDTH; /** percent of canvas width */
   static #HEAD_X = HangmanGallowsUI.#NOOSE_X;
@@ -64,14 +67,13 @@ class HangmanGallowsUI {
     if (win) {
       // transform context so hangman is drawn away from gallows
       this.#canvasCtx.translate(
-        HangmanGallowsUI.#CANVAS_WIDTH - HangmanGallowsUI.#GALLOWS_WIDTH + 4,
-        HangmanGallowsUI.#CANVAS_HEIGHT - HangmanGallowsUI.#GALLOWS_HEIGHT + 4);
+        HangmanGallowsUI.#CANVAS_WIDTH - HangmanGallowsUI.#GALLOWS_WIDTH - HangmanGallowsUI.#MARGIN,
+        HangmanGallowsUI.#CANVAS_HEIGHT - HangmanGallowsUI.#GALLOWS_HEIGHT);
     }
-    this.#canvasCtx.lineWidth = 2;
+    // draw hangman
+    this.#canvasCtx.lineWidth = 3;
     this.#canvasCtx.strokeStyle = "darkgrey";
     this.#canvasCtx.beginPath();
-
-    // draw hangman
     for (const drawMethod of this.#gallowsDrawMethods) {
       drawMethod(this.#canvasCtx, win);
     }
@@ -104,7 +106,7 @@ class HangmanGallowsUI {
 
   drawNext() {
     this.#canvasCtx.save();
-    this.#canvasCtx.lineWidth = 2;
+    this.#canvasCtx.lineWidth = 3;
     this.#canvasCtx.strokeStyle = "darkgrey";
     this.#canvasCtx.beginPath();
     this.#gallowsDrawMethods[this.#numPartsDrawn++](this.#canvasCtx);
@@ -201,5 +203,4 @@ class HangmanGallowsUI {
         HangmanGallowsUI.#POUT_RADIUS, 0, Math.PI, true);
     }
   }
-
 }
