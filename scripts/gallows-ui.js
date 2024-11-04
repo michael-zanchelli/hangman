@@ -39,6 +39,7 @@ class HangmanGallowsUI {
   static #LEG_X = HangmanGallowsUI.#NOOSE_X;
   static #LEG_Y = HangmanGallowsUI.#BODY_Y + HangmanGallowsUI.#BODY_LTH;
 
+  /** list of draw methods in the order in which they're drawn */
   #gallowsDrawMethods;
   #canvasCtx;
   #numPartsDrawn; /** number of hangman body parts drawn so far */

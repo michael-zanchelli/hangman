@@ -1,5 +1,5 @@
 
-/** Hangman board UI class */
+/** Hangman Answer UI class */
 class HangmanAnswerUI {
   /* Defines */
   static #ANSWER_CHAR_HTML = "<span>&nbsp</span>";
@@ -12,7 +12,7 @@ class HangmanAnswerUI {
 
   #theAnswer; /** the answer word (in LOWER case) */
   #answerTemplate; /** string that maps to answer UI word  */
-  #guesses; /** all guesses as typed, case preserved */
+  #guesses; /** accumulate guesses preserving case */
 
   #gallowsUI;
 
@@ -41,13 +41,17 @@ class HangmanAnswerUI {
     this.#answerTemplate = HangmanAnswerUI.#BLANK.repeat(answer.length);
   }
 
-  #endGame(win) {
-    const str = win ? "YOU WIN" : "YOU LOSE"
+  #endGame(boolYouWin) {
+    const str = boolYouWin ? "YOU WIN" : "YOU LOSE"
     console.log(str);
+
+    if (!boolYouWin) {
+      this.#statusEl.innerText = "Answer: " + this.#theAnswer; // report answer when lose
+    }
+    this.#gallowsUI.endGame(boolYouWin);
+
     this.#guessesEl.disabled = true; // enable input
     this.#guessesEl.readonly = true; // enable input
-
-    this.#gallowsUI.endGame(win);
   }
 
   /**
@@ -62,7 +66,7 @@ class HangmanAnswerUI {
       }
     }
 
-    /* Update answer UI elements using answer template */
+    /* Update Answer UI elements using answer template */
     let children = this.#answerEl.children;
     for (let indx = 0; indx < this.#answerTemplate.length; indx++) {
       if (this.#answerTemplate[indx] != HangmanAnswerUI.#BLANK) {
@@ -101,15 +105,15 @@ class HangmanAnswerUI {
       // Update answer UI
       this.#updateAnswerUI(input);
 
-      const win = !this.#answerTemplate.includes(HangmanAnswerUI.#BLANK);
-      if (win) {
+      const boolYouWin = !this.#answerTemplate.includes(HangmanAnswerUI.#BLANK);
+      if (boolYouWin) {
         setTimeout(() => { this.#endGame(true); }, 10);
       }
     }
     else {
       // update gallows UI
-      const lose = this.#gallowsUI.drawNext();
-      if (lose) {
+      const boolYouLose = this.#gallowsUI.drawNext();
+      if (boolYouLose) {
         setTimeout(() => { this.#endGame(false); }, 10);
       }
     }

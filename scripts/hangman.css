@@ -41,7 +41,7 @@ div#hangman #guesses {
 
 div#hangman #status {
   margin: inherit;
-  height: 1ex;
+  height: 2ex;
 }
 
 /* New Game button */
