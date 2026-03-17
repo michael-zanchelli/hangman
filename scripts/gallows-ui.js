@@ -1,3 +1,4 @@
+"use strict";
 
 /** Hangman board UI class */
 class HangmanGallowsUI {

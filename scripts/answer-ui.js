@@ -1,3 +1,4 @@
+"use strict";
 
 /** Hangman Answer UI class */
 class HangmanAnswerUI {
@@ -43,7 +44,7 @@ class HangmanAnswerUI {
 
   #endGame(boolYouWin) {
     const str = boolYouWin ? "YOU WIN" : "YOU LOSE"
-    console.log(str);
+    // console.log(str);
 
     if (!boolYouWin) {
       this.#statusEl.innerText = "Answer: " + this.#theAnswer; // report answer when lose

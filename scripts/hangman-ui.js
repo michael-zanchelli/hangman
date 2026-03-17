@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Hangman game UI
  */
@@ -24,12 +26,12 @@ class HangmanUI {
   }
 
   #newGame() {
-    const wordLth = 4 + Math.round(Math.random() * 5); // 4 <= lth <= 9
+    const wordLth = 4 + Math.round(Math.random() * 5); // 4 <= word-length <= 9
     const response = fetch(HangmanUI.#WORD_URL + "?length=" + wordLth)
       .then(response => response.json())
       .then(data => {
         this.#theAnswer = data[0];
-        console.log("word=" + this.#theAnswer);
+        // console.log("word=" + this.#theAnswer);
         setTimeout(() => { this.#answerUI.newGame(this.#theAnswer); }, 10);
       });
   }
