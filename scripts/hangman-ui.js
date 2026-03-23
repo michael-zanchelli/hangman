@@ -26,8 +26,10 @@ class HangmanUI {
   }
 
   #newGame() {
-    const wordLth = 4 + Math.round(Math.random() * 5); // 4 <= word-length <= 9
-    const response = fetch(HangmanUI.#WORD_URL + "?length=" + wordLth)
+    const wordLth = 4 + Math.round(Math.random() * 3); // 4 <= word-length <= 7
+    const difficulty = Math.round(Math.random() + 1); // easy (1) or medium-easy (2)
+    const response = fetch(
+      HangmanUI.#WORD_URL + "?length=" + wordLth + "&diff=" + difficulty)
       .then(response => response.json())
       .then(data => {
         this.#theAnswer = data[0];
